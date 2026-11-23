@@ -1,0 +1,92 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ScholarBuddy – Tổng hợp học bổng</title><link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap"><link rel="stylesheet" href="style.css"></head><body>
+<header class="hd"><div class="logo" data-tab="home" role="link" tabindex="0" title="Về trang chủ"><img src="logo.png" alt="ScholarBuddy"></div><nav id="nav"></nav><div class="us" id="us"></div></header><section id="hh" hidden></section><div class="pg"><section class="hero" id="hero"></section><div class="ct" id="ct"><main id="v"></main><aside class="rp" id="rp"></aside></div></div><footer class="ft"><div class="in"><div><h3>Hợp tác cùng chúng mình</h3><p>Nếu bạn đại diện cho quỹ, doanh nghiệp hoặc nhà trường và muốn đưa học bổng đến đúng sinh viên, hãy liên hệ qua email <a href="mailto:scholarbuddyy@gmail.com">scholarbuddyy@gmail.com</a> hoặc SĐT: <a href="tel:0888868488">0888868488</a>.</p></div><div class="fl"><a class="fb1" href="mailto:scholarbuddyy@gmail.com">✉ Gửi email</a><a class="fb2" href="tel:0888868488">☎ 0888868488</a></div></div><div class="cp">© 2026 ScholarBuddy</div></footer><dialog id="dlg"></dialog><div id="toast" role="status"></div>
+<script src="common.js"></script><script>
+const $=s=>document.querySelector(s),ld=(k,d)=>{try{return JSON.parse(localStorage[k])??d}catch{return d}},sv=(k,v)=>{try{localStorage[k]=JSON.stringify(v)}catch{}};
+let D=[],RV=[],RS={},VW={},tab='home',q='',g='',sort='dl',S=ld('saved',[]),C=ld('cmp',[]),P=ld('profile',{});
+const IC={kt:' ',cn:' ',yd:' ',xh:' ',nt:' ',sp:' ',kh:' '};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2000)};
+const stars=n=>'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n));
+// Điểm trung bình từ các đánh giá đã duyệt (tính lại mỗi lần tải trang nên top 3 tự cập nhật)
+function calc(){RS={};RV.forEach(r=>{const o=RS[r.sid]||(RS[r.sid]={n:0,t:0});o.n++;o.t+=r.rating});for(const k in RS)RS[k].avg=RS[k].t/RS[k].n}
+function top3(){
+ // Xếp theo lượt xem chi tiết nhiều nhất; bằng nhau thì theo điểm đánh giá, rồi hạn nộp gần nhất
+ return D.filter(s=>dl(s)[1]!=='x').sort((a,b)=>(VW[b.id]||0)-(VW[a.id]||0)||(RS[b.id]?RS[b.id].avg:0)-(RS[a.id]?RS[a.id].avg:0)||(RS[b.id]?RS[b.id].n:0)-(RS[a.id]?RS[a.id].n:0)||a.deadline.localeCompare(b.deadline)).slice(0,3)}
+const fmt=n=>Number(n||0).toLocaleString('vi-VN');
+function count(id){VW[id]=(VW[id]||0)+1;fetch('/api/views/'+id,{method:'POST'}).catch(()=>{})}
+const rate=s=>RS[s.id]?`<span class="rt"><span class="stars">★</span> ${RS[s.id].avg.toFixed(1)} <small>(${RS[s.id].n})</small></span>`:'';
+const banner=s=>`<div class="bn">${s.img?`<img src="${esc(s.img)}" alt="" loading="lazy" onerror="this.remove()">`:''}<span>${IC[s.fields[0]]||'🎓'}</span></div>`;
+function match(s){if(!P.gpa&&!P.group&&!P.year)return null;const ok=[],no=[];
+ if(P.gpa)(+P.gpa>=s.minGpa?ok:no).push('GPA');if(P.group)(s.fields.includes(P.group)?ok:no).push('ngành');if(P.year)(s.years.includes(+P.year)?ok:no).push('năm học');
+ return no.length?['no','Chưa phù hợp: '+no.join(', ')]:['ok','Phù hợp với hồ sơ của bạn']}
+function card(s){const[t,c]=dl(s),m=match(s),sd=S.includes(s.id);
+ return `<article class="card ${c}">${banner(s)}<div class="top"><h3>${esc(s.name)}</h3><button class="star" data-save="${s.id}" aria-label="${sd?'Bỏ lưu':'Lưu vào Của tôi'}">${sd?'★':'☆'}</button></div><p class="sp">${esc(s.sponsor)} ${rate(s)}</p>
+ <div class="meta"><b>${esc(s.value)}</b><span>${s.slots} suất</span><span class="dl ${c}">Hạn ${fd(s)} · ${t}</span></div><div class="tags">${s.fields.map(f=>`<i>${G[f]}</i>`).join('')}</div>${m?`<p class="m ${m[0]}">${m[1]}</p>`:''}
+ <div class="act"><button class="b g" data-det="${s.id}">Chi tiết</button><label><input type="checkbox" data-cmp="${s.id}" ${C.includes(s.id)?'checked':''}> So sánh</label></div></article>`}
+function feat(s,i){const[t,c]=dl(s);
+ return `<article class="fc">${banner(s)}<span class="rk">#${i+1}</span><div class="fb"><h3>${esc(s.name)}</h3><p class="sp">${esc(s.sponsor)}</p>
+ <p class="fr vw">👁 <b>${fmt(VW[s.id])}</b> lượt xem</p><p class="fr">${RS[s.id]?`<span class="stars">${stars(RS[s.id].avg)}</span> <b>${RS[s.id].avg.toFixed(1)}</b> <small>(${RS[s.id].n} đánh giá)</small>`:'<small>Chưa có đánh giá</small>'}</p>
+ <div class="meta"><b>${esc(s.value)}</b><span>${s.slots} suất</span></div><p class="dl ${c}">Hạn ${fd(s)} · ${t}</p><button class="b" data-det="${s.id}">Xem chi tiết</button></div></article>`}
+const ART=`<svg viewBox="0 0 320 240" role="img" aria-label="Minh họa mũ tốt nghiệp và sách"><circle cx="160" cy="120" r="108" fill="#fff" opacity=".12"/><circle cx="160" cy="120" r="76" fill="#fff" opacity=".12"/><rect x="62" y="166" width="196" height="22" rx="4" fill="#fff"/><rect x="74" y="144" width="172" height="22" rx="4" fill="#ffd9de"/><rect x="88" y="122" width="144" height="22" rx="4" fill="#fff"/><path d="M160 36 56 82l104 46 104-46z" fill="#1d1d22"/><path d="M104 106v36c0 14 26 24 56 24s56-10 56-24v-36l-56 25z" fill="#33333b"/><path d="M264 84v50" stroke="#f2a900" stroke-width="5" stroke-linecap="round"/><circle cx="264" cy="140" r="8" fill="#f2a900"/><path d="M52 50l5 11 12 2-9 8 2 12-10-6-10 6 2-12-9-8 12-2z" fill="#f2a900"/><path d="M276 176l4 8 9 1-6 6 2 9-8-4-8 4 2-9-6-6 9-1z" fill="#fff" opacity=".8"/></svg>`;
+const filt=()=>D.filter(s=>(!g||s.fields.includes(g))&&(s.name+s.sponsor).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>sort==='dl'?a.deadline.localeCompare(b.deadline):a.name.localeCompare(b.name,'vi'));
+const grid=a=>a.length?`<div class="grid">${a.map(card).join('')}</div>`:'<div class="empty">Không tìm thấy học bổng nào. Thử đổi từ khóa hoặc nhóm ngành.</div>';
+function stats(){const open=D.filter(s=>dl(s)[1]!=='x').length;return [[D.length,'Học bổng'],[open,'Đang mở'],[RV.length,'Đánh giá']].map(([n,l])=>`<div><b>${n}</b>${l}</div>`).join('')}
+function home(){
+ const T=top3(),tm=[...RV].filter(r=>r.rating>=4).sort((a,b)=>b.rating-a.rating||b.date.localeCompare(a.date)).slice(0,3);
+ return `<section class="sec"><h2>Vì sao chọn ScholarBuddy?</h2><div class="why"><div><span>🔎</span><h3>Tìm nhanh</h3><p>Lọc theo nhóm ngành, tìm theo tên hoặc đơn vị tài trợ, sắp xếp theo hạn nộp.</p></div><div><span>⇄</span><h3>So sánh dễ</h3><p>Đặt tối đa 4 học bổng cạnh nhau để chọn học bổng hợp với mình nhất.</p></div><div><span>★</span><h3>Đánh giá thật</h3><p>Đọc kinh nghiệm từ các bạn đã nộp hồ sơ, xem điểm trung bình từng học bổng.</p></div></div></section>
+ <section class="sec"><h2>Học bổng được quan tâm nhiều nhất</h2><p class="sm">Top 3 học bổng có nhiều lượt xem chi tiết nhất, tự cập nhật khi có thêm lượt xem.</p>${T.length?`<div class="fgrid">${T.map(feat).join('')}</div>`:'<div class="empty">Chưa có học bổng nào.</div>'}</section>
+ <section class="sec"><h2>Sinh viên nói gì</h2>${tm.length?`<div class="tgrid">${tm.map(r=>{const s=D.find(x=>x.id===r.sid);return `<figure class="tm"><div class="stars">${stars(r.rating)}</div><blockquote>“${esc(r.text)}”</blockquote><figcaption><b>${esc(r.name)}</b>${s?`<br><small>${esc(s.name)}</small>`:''}</figcaption></figure>`}).join('')}</div>`:'<div class="empty">Chưa có đánh giá nào. Vào “Chi tiết” của một học bổng để là người đầu tiên chia sẻ.</div>'}</section>
+ <section class="cta2"><h2>Sẵn sàng tìm học bổng cho mình?</h2><p>Tạo hồ sơ để thấy ngay học bổng nào phù hợp với GPA, ngành và năm học của bạn.</p><button class="b w" data-tab="all">Xem tất cả học bổng</button> <button class="b w2" data-tab="pro">Tạo hồ sơ</button></section>`}
+function about(){
+ const D4=[['🎯','Cá nhân hoá','Gợi ý học bổng theo hồ sơ của riêng bạn, thay vì một bảng tin ai xem cũng như nhau.'],['🧭','Có lộ trình hành động','Checklist từng bước cho từng học bổng, kèm hạn chót.'],['📌','Nguồn rõ ràng','Mỗi học bổng gắn nguồn và ngày cập nhật. Nhóm hướng tới hợp tác với quỹ, doanh nghiệp và Trung tâm hỗ trợ sinh viên của các trường để nhận thông tin sớm và chính xác.'],['⏰','Quản lý thông minh','Dữ liệu gắn thẻ để lọc nhanh, nhắc hạn nộp trước 7 ngày, 3 ngày và 24 giờ.']];
+ return `<section class="ab"><p>ScholarBuddy là nền tảng tổng hợp học bổng của các quỹ và doanh nghiệp trong nước, dành cho sinh viên. Dự án do Nhóm sinh viên trường Đại học Ngoại Thương phát triển, xuất phát từ một vấn đề rất quen thuộc: sinh viên có năng lực nhưng không biết tìm thông tin học bổng ở đâu. Thông tin nằm rải rác ở nhiều fanpage, group và website, bài đăng nhanh bị trôi, và nhiều bạn chỉ biết khi đã gần hết hạn.</p>
+ <p>Chúng mình gom mọi cơ hội về một nơi duy nhất, trình bày theo cùng một khung để dễ đọc và dễ so sánh. Mỗi học bổng có đầy đủ đơn vị tài trợ, đối tượng, thời gian mở đóng và điều kiện xét tuyển. ScholarBuddy không dừng ở việc đăng tin: bạn còn được gợi ý học bổng phù hợp với ngành, năm học, GPA và nhận checklist hồ sơ riêng cho từng học bổng.</p>
+ <div class="ms"><span class="chip">Sứ mệnh</span><p>Giúp sinh viên tiếp cận đúng học bổng, chuẩn bị hồ sơ tự tin và không bỏ lỡ cơ hội vì thiếu thông tin.</p><p>Đồng thời giúp các quỹ và doanh nghiệp tiếp cận được nhiều sinh viên phù hợp hơn.</p></div></section>
+ <section class="sec"><h2>Chúng mình khác biệt ở đâu</h2><div class="why">${D4.map(([i,t,d])=>`<div><span>${i}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div></section>
+ <section class="sec"><h2>Hướng phát triển</h2><div class="ab"><div class="roadmap"><p>ScholarBuddy sẽ mở rộng sang học bổng du học và trao đổi, tích hợp thêm trợ lý AI hỗ trợ viết bài luận, CV, cùng mentor và các sự kiện, cuộc thi dành cho sinh viên.</p></div></div></section>
+ <section class="cta2"><h2>Bạn đại diện cho quỹ, doanh nghiệp hoặc nhà trường?</h2><p>Hãy cùng chúng mình đưa học bổng đến đúng sinh viên.</p><button class="b w" data-ft="1">Liên hệ hợp tác</button> <button class="b w2" data-tab="all">Xem học bổng</button></section>`}
+function side(){
+ const N=[['home','⌂','Trang chủ'],['about','ℹ','Giới thiệu'],['all','▦','Tổng hợp'],['mine','★','Của tôi',S.length],['cmp','⇄','So sánh',C.length],['pro','☺','Hồ sơ']];
+ $('#nav').innerHTML=N.map(([k,i,l,n])=>`<button data-tab="${k}" class="${tab===k?'on':''}"><span>${i}</span>${l}${n?`<em>${n}</em>`:''}</button>`).join('');
+ const pc=['school','major','year','gpa','extra'].filter(k=>P[k]).length*20;
+ $('#us').innerHTML=`<i>${esc((P.school||'K')[0].toUpperCase())}</i>${esc(P.school||'Khách')}`;
+ $('#rp').innerHTML=`<h4>Hồ sơ của bạn</h4><div class="pb"><i style="width:${pc}%"></i></div><p><b>${pc}%</b> hoàn thiện</p><p class="sm">${pc<100?'Điền đủ hồ sơ để thấy mức phù hợp ở từng học bổng.':'Hồ sơ đã đầy đủ.'}</p><button class="b" data-tab="pro">Cập nhật hồ sơ</button><hr><p>Đã lưu: <b>${S.length}</b></p><p>Đang so sánh: <b>${C.length}/4</b></p><button class="b g" data-tab="cmp">So sánh ngay</button>`}
+function render(){
+ side();
+ const H=tab==='home',W=H||tab==='about';$('#ct').classList.toggle('one',W);$('#rp').hidden=W;
+ $('#hh').hidden=!H;$('#hero').hidden=H;
+ $('#hh').innerHTML=H?`<div class="hc"><span class="chip">Dành cho sinh viên</span><h1>ScholarBuddy – người bạn đồng hành săn học bổng</h1><div class="cta"><button class="b w" data-tab="all">Khám phá học bổng</button><button class="b w2" data-tab="pro">Tạo hồ sơ</button></div><div class="st">${stats()}</div></div><button class="dn" data-go="1">Kéo xuống để xem thêm<span>↓</span></button>`:'';
+ $('#hero').innerHTML=H?'':tab==='about'?`<div><span class="chip">Về chúng mình</span><h1>Giới thiệu ScholarBuddy</h1><p>Gom mọi cơ hội học bổng về một nơi duy nhất.</p></div>`:`<div><span class="chip">Cập nhật liên tục</span><h1>Học bổng cho bạn</h1><p>Tìm kiếm, lưu và so sánh học bổng phù hợp với hồ sơ của bạn.</p></div><div class="st">${stats()}</div>`;
+ let h='';
+ if(tab==='home')h=home();
+ if(tab==='about')h=about();
+ if(tab==='all')h=`<div class="bar"><input id="q" type="search" placeholder="Tìm theo tên hoặc đơn vị tài trợ" value="${esc(q)}" aria-label="Tìm học bổng"><select id="g" aria-label="Nhóm ngành"><option value="">Tất cả nhóm ngành</option>${Object.entries(G).map(([k,v])=>`<option value="${k}" ${g===k?'selected':''}>${v}</option>`)}</select><select id="so" aria-label="Sắp xếp"><option value="dl">Hạn nộp gần nhất</option><option value="n" ${sort==='n'?'selected':''}>Tên A–Z</option></select></div><div id="list">${grid(filt())}</div>`;
+ if(tab==='mine'){const a=D.filter(s=>S.includes(s.id));h=a.length?grid(a):'<div class="empty">Bạn chưa lưu học bổng nào. Bấm ☆ trên thẻ học bổng để lưu vào đây.</div>'}
+ if(tab==='cmp'){const a=C.map(i=>D.find(s=>s.id===i)).filter(Boolean);h=a.length?`<p>Chọn tối đa 4 học bổng. Tích “So sánh” ở thẻ học bổng để thêm.</p><div class="tw"><table><thead><tr><th></th>${a.map(s=>`<th>${esc(s.name)}<br><button class="b g" data-cmp-x="${s.id}">Bỏ</button></th>`).join('')}</tr></thead><tbody>${ROWS.map(([l,f])=>`<tr><th>${l}</th>${a.map(s=>`<td>${f(s)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty">Chưa có học bổng để so sánh. Vào “Tổng hợp” và tích “So sánh” ở 2–4 học bổng.</div>'}
+ if(tab==='pro')h=`<form class="f" id="pf"><label class="l">Trường<input name="school" value="${esc(P.school)}" placeholder="VD: Đại học Kinh tế Quốc dân"></label><label class="l">Ngành<input name="major" value="${esc(P.major)}" placeholder="VD: Tài chính ngân hàng"></label>
+ <label class="l">Nhóm ngành<select name="group"><option value="">Chọn nhóm ngành</option>${Object.entries(G).map(([k,v])=>`<option value="${k}" ${P.group===k?'selected':''}>${v}</option>`)}</select></label>
+ <div class="row"><label class="l">Năm học<select name="year"><option value="">Chọn</option>${[1,2,3,4,5].map(y=>`<option value="${y}" ${P.year==y?'selected':''}>Năm ${y>4?'5 trở lên':y}</option>`)}</select></label><label class="l">GPA (thang 4)<input name="gpa" type="number" min="0" max="4" step="0.01" value="${esc(P.gpa)}"></label></div>
+ <label class="l">Hoạt động ngoại khóa<textarea name="extra" rows="4" placeholder="CLB, tình nguyện, cuộc thi, nghiên cứu...">${esc(P.extra)}</textarea></label><button class="b">Lưu hồ sơ</button></form>`;
+ $('#v').innerHTML=h}
+async function openDet(id){const s=D.find(x=>x.id===id);let R=[];try{R=(await(await fetch('/api/reviews')).json()).filter(r=>r.sid===id)}catch{}
+ const av=R.length?(R.reduce((a,r)=>a+r.rating,0)/R.length).toFixed(1):'';
+ $('#dlg').innerHTML=`<h2 style="margin-top:0">${esc(s.name)}</h2><table>${ROWS.map(([l,f])=>`<tr><th>${l}</th><td>${f(s)}</td></tr>`).join('')}</table>
+ <h3>Đánh giá${av?` · <span class="stars">★</span> ${av} (${R.length})`:''}</h3>${R.length?R.map(r=>`<div class="rv"><b>${esc(r.name)}</b> <span class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span> <small>${r.date.split('-').reverse().join('/')}</small><p>${esc(r.text)}</p></div>`).join(''):'<p class="sm">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>'}
+ <form id="rf" class="rf" data-sid="${id}"><input name="name" placeholder="Tên của bạn" maxlength="40" required><select name="rating" aria-label="Số sao">${[5,4,3,2,1].map(n=>`<option value="${n}">${'★'.repeat(n)} (${n} sao)</option>`).join('')}</select><textarea name="text" rows="3" maxlength="1000" placeholder="Chia sẻ kinh nghiệm xin học bổng này..." required></textarea>
+ <small class="rm">Đánh giá sẽ hiển thị sau khi quản trị viên duyệt.</small><div><button class="b">Gửi đánh giá</button> <button type="button" class="b g" onclick="dlg.close()">Đóng</button></div></form>`;$('#dlg').showModal();count(id)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tab],[data-go],[data-ft],[data-save],[data-cmp-x],[data-det]')||e.target,d=t.dataset;
+ if(d.tab){tab=d.tab;render();scrollTo({top:0})}
+ if(d.ft)document.querySelector('.ft').scrollIntoView({behavior:'smooth'})
+ if(d.go)scrollTo({top:$('#hh').offsetHeight,behavior:'smooth'})
+ if(d.save){S=S.includes(d.save)?S.filter(i=>i!==d.save):[...S,d.save];sv('saved',S);render()}
+ if(d.cmpX){C=C.filter(i=>i!==d.cmpX);sv('cmp',C);render()}
+ if(d.det)openDet(d.det)});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.cmp){const i=t.dataset.cmp;if(t.checked&&C.length>=4){t.checked=false;return toast('Chỉ so sánh tối đa 4 học bổng')}C=t.checked?[...C,i]:C.filter(x=>x!==i);sv('cmp',C);side()}
+ if(t.id==='g'){g=t.value;$('#list').innerHTML=grid(filt())}if(t.id==='so'){sort=t.value;$('#list').innerHTML=grid(filt())}});
+document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;$('#list').innerHTML=grid(filt())}});
+document.addEventListener('submit',e=>{if(e.target.id==='rf'){e.preventDefault();const f=e.target,m=f.querySelector('.rm'),b=Object.fromEntries(new FormData(f));b.sid=f.dataset.sid;
+ fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(async r=>{const j=await r.json();if(!r.ok)throw Error(j.error);f.reset();m.textContent='Đã gửi! Đánh giá sẽ hiển thị sau khi được duyệt.'}).catch(x=>m.textContent=x.message)}
+ if(e.target.id==='pf'){e.preventDefault();P=Object.fromEntries(new FormData(e.target));sv('profile',P);side();toast('Đã lưu hồ sơ. Học bổng sẽ hiện mức phù hợp.')}});
+Promise.all([fetch('/api/scholarships').then(r=>r.json()),fetch('/api/reviews').then(r=>r.json()).catch(()=>[]),fetch('/api/views').then(r=>r.json()).catch(()=>({}))]).then(([d,r,v])=>{D=d;RV=r;VW=v;calc();render()}).catch(()=>{$('#v').innerHTML='<div class="empty">Không tải được dữ liệu. Hãy chạy máy chủ bằng lệnh <b>node server.js</b> rồi mở http://localhost:3000</div>'});
+</script></body></html>

@@ -1,0 +1,47 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quản trị ScholarBuddy</title><link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap"><link rel="stylesheet" href="style.css"></head><body>
+<div class="app"><aside class="sb"><div class="logo"><img src="logo.png" alt="ScholarBuddy"></div><nav><button class="on"><span>▦</span>Học bổng</button><button onclick="rv.scrollIntoView({behavior:'smooth'})"><span>✎</span>Đánh giá<em id="rc" hidden></em></button><button onclick="location='/'"><span>⌂</span>Trang người dùng</button></nav></aside><div class="col"><div class="tp"><b>ScholarBuddy · Quản trị</b><span>Thêm, sửa, xóa học bổng</span></div><div class="pg"><section class="hero"><div><span class="chip">Khu vực quản trị</span><h1>Quản trị ScholarBuddy</h1><p>Thay đổi hiển thị ngay cho người dùng.</p></div></section>
+<main id="login"><form class="f" id="lf"><label class="l">Mật khẩu quản trị<input type="password" id="pw" required></label><button class="b">Đăng nhập</button><p id="le" class="m no"></p></form></main>
+<main id="app" hidden><h2 id="ft" style="margin-top:0">Thêm học bổng mới</h2>
+<form class="f" id="sf" style="max-width:none"><div class="row"><label class="l">Tên học bổng<input name="name" required></label><label class="l">Đơn vị tài trợ<input name="sponsor" required></label></div>
+<div class="row"><label class="l">Giá trị học bổng<input name="value" placeholder="VD: 20.000.000đ/năm" required></label><label class="l">Số suất<input name="slots" type="number" min="1" required></label></div>
+<div class="row"><label class="l">Hạn nộp<input name="deadline" type="date" required></label><label class="l">GPA tối thiểu (thang 4, 0 nếu không yêu cầu)<input name="minGpa" type="number" min="0" max="4" step="0.1" value="0"></label></div>
+<div class="l">Ngành<div class="ck" id="gf"></div></div><div class="l">Năm học<div class="ck" id="yf"></div></div>
+<div class="row"><label class="l">Bài luận<select name="essay"><option value="1">Có</option><option value="0">Không</option></select></label><label class="l">Phỏng vấn<select name="interview"><option value="1">Có</option><option value="0">Không</option></select></label></div>
+<label class="l">Hồ sơ cần chuẩn bị (mỗi dòng một mục)<textarea name="docs" rows="4"></textarea></label>
+<div class="l">Ảnh minh họa của học bổng<div class="up"><img id="pv" alt="" hidden><div><input type="file" id="uf" accept="image/*"><small>Chọn ảnh từ máy (tự thu nhỏ khi tải lên), hoặc dán link ảnh vào ô dưới. Để trống thì dùng biểu tượng mặc định.</small></div></div><input name="img" id="iu" placeholder="/uploads/... hoặc https://..."><div><button type="button" class="b g" id="ux" hidden>Xóa ảnh</button></div></div>
+<div><button class="b">Lưu học bổng</button> <button type="button" class="b g" id="cx" hidden>Hủy sửa</button></div></form>
+<h2>Học bổng đã đăng (<span id="n">0</span>)</h2><div class="tw"><table><thead><tr><th>Tên</th><th>Đơn vị tài trợ</th><th>Hạn nộp</th><th></th></tr></thead><tbody id="tb"></tbody></table></div><h2 id="rv">Kiểm duyệt đánh giá (<span id="rn">0</span> chờ duyệt)</h2><div class="tw"><table><thead><tr><th>Học bổng</th><th>Nội dung</th><th>Ngày / Trạng thái</th><th></th></tr></thead><tbody id="rb"></tbody></table></div></main></div></div></div><div id="toast" role="status"></div>
+<script src="common.js"></script><script>
+const $=s=>document.querySelector(s);let K=sessionStorage.k||'',D=[],E=null;
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2200)};
+async function call(m,u,b){const r=await fetch(u,{method:m,headers:{'Content-Type':'application/json','x-admin-key':K},body:b?JSON.stringify(b):undefined});const j=await r.json();if(!r.ok)throw Error(j.error);return j}
+$('#gf').innerHTML=Object.entries(G).map(([k,v])=>`<label><input type="checkbox" name="f" value="${k}">${v}</label>`).join('');
+$('#yf').innerHTML=[1,2,3,4,5].map(y=>`<label><input type="checkbox" name="y" value="${y}">Năm ${y>4?'5+':y}</label>`).join('');
+async function loadS(){D=await (await fetch('/api/scholarships')).json();$('#n').textContent=D.length;
+ $('#tb').innerHTML=D.map(s=>`<tr><td>${s.img?`<img class="th" src="${esc(s.img)}" alt="" onerror="this.remove()">`:''}<b>${esc(s.name)}</b></td><td>${esc(s.sponsor)}</td><td>${fd(s)}</td><td><button class="b g" data-e="${s.id}">Sửa</button> <button class="b r" data-d="${s.id}">Xóa</button></td></tr>`).join('')||'<tr><td colspan="4">Chưa có học bổng nào. Dùng biểu mẫu phía trên để thêm.</td></tr>'}
+async function load(){await loadS();await loadR()}
+async function loadR(){try{const R=(await call('GET','/api/reviews/all')).sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||b.date.localeCompare(a.date)),p=R.filter(r=>r.status==='pending').length,c=$('#rc');
+ $('#rn').textContent=p;c.hidden=!p;c.textContent=p;
+ $('#rb').innerHTML=R.map(r=>{const s=D.find(x=>x.id===r.sid);return `<tr><td>${esc(s?s.name:'(đã xóa)')}</td><td><b>${esc(r.name)}</b> <span style="color:#f2a900">${'★'.repeat(r.rating)}</span><br>${esc(r.text)}</td><td>${r.date.split('-').reverse().join('/')}<br>${r.status==='pending'?'<b style="color:#a06c00">Chờ duyệt</b>':'Đã duyệt'}</td><td>${r.status==='pending'?`<button class="b" data-ok="${r.id}">Duyệt</button> `:''}<button class="b r" data-rd="${r.id}">Xóa</button></td></tr>`}).join('')||'<tr><td colspan="4">Chưa có đánh giá nào.</td></tr>'}catch(x){toast(x.message)}}
+function enter(){$('#login').hidden=true;$('#app').hidden=false;load()}
+function reset(){E=null;$('#sf').reset();pv();$('#ft').textContent='Thêm học bổng mới';$('#cx').hidden=true}
+$('#lf').onsubmit=async e=>{e.preventDefault();K=$('#pw').value;try{await call('GET','/api/check');sessionStorage.k=K;enter()}catch(x){$('#le').textContent=x.message}};
+$('#sf').onsubmit=async e=>{e.preventDefault();const f=e.target,v=n=>f.elements[n].value,c=n=>[...f.querySelectorAll(`[name=${n}]:checked`)].map(i=>+i.value||i.value);
+ const fields=c('f'),years=c('y');if(!fields.length||!years.length)return toast('Chọn ít nhất một ngành và một năm học');
+ const b={name:v('name'),sponsor:v('sponsor'),value:v('value'),slots:+v('slots'),deadline:v('deadline'),minGpa:+v('minGpa'),fields,years,essay:v('essay')==='1',interview:v('interview')==='1',docs:v('docs'),img:v('img').trim()};
+ try{await call(E?'PUT':'POST','/api/scholarships/'+(E||''),b);toast(E?'Đã cập nhật học bổng':'Đã thêm học bổng');reset();load()}catch(x){toast(x.message)}};
+$('#cx').onclick=reset;
+function pv(){const v=$('#iu').value.trim();$('#pv').hidden=!v;if(v)$('#pv').src=v;$('#ux').hidden=!v}
+$('#iu').oninput=pv;$('#ux').onclick=()=>{$('#iu').value='';pv()};
+async function shrink(f){if(f.type==='image/gif'||!f.type.startsWith('image/'))return f;const bm=await createImageBitmap(f),k=Math.min(1,1000/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',.85))}
+$('#uf').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const bl=await shrink(f),r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':bl.type,'x-admin-key':K},body:bl}),j=await r.json();if(!r.ok)throw Error(j.error);$('#iu').value=j.url;pv();toast('Đã tải ảnh lên. Nhớ bấm "Lưu học bổng".')}catch(x){toast(x.message||'Không tải được ảnh')}e.target.value=''};
+document.addEventListener('click',async e=>{const d=e.target.dataset;
+ if(d.e){const s=D.find(x=>x.id===d.e),f=$('#sf').elements;E=s.id;for(const k of['name','sponsor','value','slots','deadline','minGpa','docs','img'])f[k].value=s[k]??'';f.essay.value=s.essay?'1':'0';f.interview.value=s.interview?'1':'0';
+  $('#sf').querySelectorAll('[name=f]').forEach(i=>i.checked=s.fields.includes(i.value));$('#sf').querySelectorAll('[name=y]').forEach(i=>i.checked=s.years.includes(+i.value));
+  pv();$('#ft').textContent='Sửa: '+s.name;$('#cx').hidden=false;scrollTo({top:0,behavior:'smooth'})}
+ if(d.ok){try{await call('PUT','/api/reviews/'+d.ok);toast('Đã duyệt đánh giá');loadR()}catch(x){toast(x.message)}}
+ if(d.rd&&confirm('Xóa đánh giá này? Không thể hoàn tác.')){try{await call('DELETE','/api/reviews/'+d.rd);toast('Đã xóa đánh giá');loadR()}catch(x){toast(x.message)}}
+ if(d.d&&confirm('Xóa học bổng này? Không thể hoàn tác.')){try{await call('DELETE','/api/scholarships/'+d.d);toast('Đã xóa học bổng');load()}catch(x){toast(x.message)}}});
+if(K)call('GET','/api/check').then(enter).catch(()=>{});
+</script></body></html>

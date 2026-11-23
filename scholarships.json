@@ -1,0 +1,298 @@
+[
+  {
+    "id": "m1",
+    "name": "Học bổng Tài năng Kinh tế (mẫu)",
+    "sponsor": "Quỹ Phát triển Kinh tế (mẫu)",
+    "value": "30.000.000đ/năm",
+    "slots": 20,
+    "deadline": "2027-03-15",
+    "minGpa": 3.2,
+    "fields": [
+      "kt"
+    ],
+    "years": [
+      2,
+      3,
+      4
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "CV\nBảng điểm\nThư giới thiệu\nBài luận 500 từ"
+  },
+  {
+    "id": "m2",
+    "name": "Học bổng Kỹ sư Tương lai (mẫu)",
+    "sponsor": "Công ty Công nghệ ABC (mẫu)",
+    "value": "Toàn phần + thực tập có lương",
+    "slots": 10,
+    "deadline": "2027-02-28",
+    "minGpa": 3.4,
+    "fields": [
+      "cn"
+    ],
+    "years": [
+      3,
+      4,
+      5
+    ],
+    "essay": false,
+    "interview": true,
+    "docs": "Bảng điểm\nPortfolio dự án\nCV"
+  },
+  {
+    "id": "m3",
+    "name": "Học bổng Khoa học Sự sống (mẫu)",
+    "sponsor": "Quỹ Nghiên cứu Y sinh (mẫu)",
+    "value": "50.000.000đ/năm",
+    "slots": 5,
+    "deadline": "2027-04-10",
+    "minGpa": 3.5,
+    "fields": [
+      "yd"
+    ],
+    "years": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "Bảng điểm\nĐề cương nghiên cứu\n2 thư giới thiệu"
+  },
+  {
+    "name": "Học bổng Truyền thông Trẻ (mẫu)",
+    "sponsor": "Tập đoàn Truyền thông XYZ (mẫu)",
+    "value": "15.000.000đ/kỳ",
+    "slots": 15,
+    "deadline": "2027-01-20",
+    "minGpa": 3,
+    "fields": [
+      "xh"
+    ],
+    "years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "essay": true,
+    "interview": false,
+    "docs": "Bài luận\nSản phẩm truyền thông\nBảng điểm",
+    "img": "/uploads/mwoeybq59xgl.jpg",
+    "id": "m4"
+  },
+  {
+    "id": "m5",
+    "name": "Học bổng Sáng tạo Thiết kế (mẫu)",
+    "sponsor": "Hiệp hội Thiết kế (mẫu)",
+    "value": "20.000.000đ",
+    "slots": 8,
+    "deadline": "2027-05-05",
+    "minGpa": 0,
+    "fields": [
+      "nt"
+    ],
+    "years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "essay": false,
+    "interview": true,
+    "docs": "Portfolio 10 tác phẩm\nCV"
+  },
+  {
+    "id": "m6",
+    "name": "Học bổng Nhà giáo Tương lai (mẫu)",
+    "sponsor": "Quỹ Khuyến học (mẫu)",
+    "value": "10.000.000đ/kỳ",
+    "slots": 30,
+    "deadline": "2027-03-01",
+    "minGpa": 3,
+    "fields": [
+      "sp"
+    ],
+    "years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "essay": true,
+    "interview": false,
+    "docs": "Bảng điểm\nGiấy xác nhận hoạt động\nBài luận"
+  },
+  {
+    "name": "Học bổng Vượt khó Học giỏi (mẫu)",
+    "sponsor": "Quỹ Cộng đồng (mẫu)",
+    "value": "12.000.000đ/năm",
+    "slots": 50,
+    "deadline": "2027-02-10",
+    "minGpa": 2.8,
+    "fields": [
+      "kt",
+      "cn",
+      "yd",
+      "xh",
+      "nt",
+      "sp",
+      "kh"
+    ],
+    "years": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "essay": true,
+    "interview": false,
+    "docs": "Giấy xác nhận hoàn cảnh\nBảng điểm",
+    "img": "/uploads/mwoezf03zbaw.jpg",
+    "id": "m7"
+  },
+  {
+    "name": "Chạm 2026",
+    "sponsor": "Quỹ Từ thiện Bông Hông Nhỏ ",
+    "value": "5.000.000 - 8.000.000 đồng/suất",
+    "slots": 160,
+    "deadline": "2026-11-15",
+    "minGpa": 3,
+    "fields": [
+      "kt",
+      "cn",
+      "yd",
+      "xh",
+      "nt",
+      "sp",
+      "kh"
+    ],
+    "years": [
+      1,
+      2
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "1. Lá thư học bổng (Biểu mẫu CHAM01/2026-LRF): 01 bản gốc, viết tay bằng mực xanh.\n\n2. Giấy cam kết (Biểu mẫu CHAM02/2026-LRF): 01 bản gốc, viết tay bằng mực xanh, dán ảnh 3x4 chụp không quá 6 tháng.\n\n3. Giấy chấp thuận sử dụng/chia sẻ hình ảnh và thông tin cá nhân (Biểu mẫu CHAM03/2026-LRF): 01 bản gốc, viết tay bằng mực xanh.\n\n4. Giấy chứng nhận hộ nghèo/cận nghèo còn hiệu lực hoặc giấy tờ chứng minh hoàn cảnh gia đình khó khăn có xác nhận của địa phương: 01 bản.\n\n5. Thư giới thiệu của giáo viên/khoa: 01 bản, có chữ ký xác nhận và ghi rõ họ tên.\n\n6. Căn cước công dân: 01 bản sao y công chứng.\n\n7. Thẻ sinh viên: 01 bản sao y công chứng.\n\n8. Kết quả học tập và rèn luyện:\n- Tân sinh viên: Kết quả học tập và rèn luyện lớp 12 có xác nhận của nhà trường.\n- Sinh viên từ năm 2: Bảng điểm học tập và bảng đánh giá rèn luyện năm học 2025–2026 có xác nhận của nhà trường.\n(01 bản gốc hoặc bản sao y công chứng).\n\n9. Ảnh chụp chung các thành viên gia đình: 01 tấm; ảnh chụp chính diện ngôi nhà: 01 tấm (ảnh chụp không quá 6 tháng, in ảnh cứng).\n\n10. Các giấy tờ/hình ảnh minh chứng bổ sung (nếu có): Giấy chứng nhận tham gia hoạt động cộng đồng, bằng khen, giấy chứng nhận thành tích học tập, hoạt động văn nghệ/thể thao; giấy xác nhận khuyết tật, mồ côi hoặc giấy chẩn đoán bệnh của thành viên gia đình.",
+    "img": "https://drive.google.com/file/d/1chMKtKC3oyULGt0ceWm2d94zvd2w6ktO/view?usp=drivesdk",
+    "id": "mwp7lph8"
+  },
+  {
+    "name": "CHƯƠNG TRÌNH HỌC BỔNG ĐỒNG HÀNH NĂM HỌC 2026–2027",
+    "sponsor": "Quỹ Học bổng Đồng Hành (Dong Hanh Scholarship Association)",
+    "value": "10.000.000 VNĐ/suất/năm học: Đối với sinh viên đang theo học tại các trường ở Hà Nội và TP. Hồ Chí Minh. 8.000.000 VNĐ/suất/năm học: Đối với sinh viên đang theo học tại các trường ở Đà Nẵng.",
+    "slots": 150,
+    "deadline": "2026-12-04",
+    "minGpa": 2.5,
+    "fields": [
+      "kt",
+      "cn",
+      "yd",
+      "xh",
+      "nt"
+    ],
+    "years": [
+      1,
+      2
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "1. Thư xin học bổng: Trình bày thông tin bản thân, hoàn cảnh gia đình, khó khăn trong học tập, quá trình học tập, thành tích và định hướng tương lai.\n\n2. Bảng điểm học tập đại học đến thời điểm hiện tại (đối với sinh viên năm nhất: giấy chứng minh kết quả kỳ thi THPT).\n\n3. Giấy tờ chứng minh hoàn cảnh gia đình khó khăn.\n\n4. Các giấy tờ minh chứng bổ sung có giá trị (nếu có): Bằng khen, giấy chứng nhận thành tích học tập hoặc hoạt động cộng đồng.",
+    "img": "",
+    "id": "mwp89loz"
+  },
+  {
+    "name": "Học bổng Phuc’s Fond năm học 2026–2027",
+    "sponsor": "Phuc’s Fond",
+    "value": " 3.000.000 – 30.000.000 VNĐ/suất đối với các nhóm học bổng có mức tiền được công bố.",
+    "slots": 240,
+    "deadline": "2026-12-20",
+    "minGpa": 0,
+    "fields": [
+      "kt",
+      "cn",
+      "yd",
+      "xh",
+      "nt"
+    ],
+    "years": [
+      1,
+      2
+    ],
+    "essay": true,
+    "interview": false,
+    "docs": "Giấy xác nhận kết quả học tập năm học 2025–2026 hoặc giấy báo nhập học đối với sinh viên mới trúng tuyển năm học 2026–2027.\nGiấy xác nhận hộ nghèo hoặc hộ cận nghèo.",
+    "img": "",
+    "id": "mwp8gjso"
+  },
+  {
+    "name": "Học bổng Lương Văn Can",
+    "sponsor": "Quỹ Lương Văn Can",
+    "value": "100% học phí",
+    "slots": 77,
+    "deadline": "2026-10-02",
+    "minGpa": 3.6,
+    "fields": [
+      "kt",
+      "cn",
+      "yd",
+      "xh",
+      "nt",
+      "sp"
+    ],
+    "years": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "",
+    "img": "https://lvcfoundation.org.vn/vi/",
+    "id": "mwpcndsc"
+  },
+  {
+    "name": "Học bổng Tài năng Pegatron",
+    "sponsor": "Tập đoàn Pegatron",
+    "value": "124.000.000",
+    "slots": 4,
+    "deadline": "2026-10-15",
+    "minGpa": 3.2,
+    "fields": [
+      "cn"
+    ],
+    "years": [
+      3,
+      4
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "Sơ yếu lý lịch / CV cá nhân (bằng tiếng Anh hoặc tiếng Trung)\n\nBảng điểm học tập tích lũy chính thức (có xác nhận của nhà trường)\n\nChứng chỉ ngoại ngữ (IELTS/TOEIC/HSK)\n\nGiấy chứng nhận giải thưởng, hoạt động ngoại khóa (nếu có)\n\nBài luận ngắn về định hướng nghề nghiệp trong ngành công nghệ",
+    "img": "",
+    "id": "mwqnu13v"
+  },
+  {
+    "name": "Học bổng ươm mầm tài năng SHB",
+    "sponsor": "Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)",
+    "value": "20.000.000 VNĐ/năm",
+    "slots": 20,
+    "deadline": "2026-12-30",
+    "minGpa": 3,
+    "fields": [
+      "kt"
+    ],
+    "years": [
+      3,
+      4
+    ],
+    "essay": true,
+    "interview": true,
+    "docs": "Đơn đăng ký tham gia chương trình học bổng SHB\n\nBảng điểm tích lũy tính đến kỳ gần nhất\n\nCăn cước công dân và thẻ sinh viên (bản sao)\n\nBản ghi nhận thành tích hoạt động nghiên cứu khoa học hoặc phong trào Đoàn - Hội\n\nBài luận chia sẻ về mục tiêu phát triển trong lĩnh vực Tài chính - Ngân hàng",
+    "img": "",
+    "id": "mwqnxceh"
+  }
+]
